@@ -56,7 +56,7 @@ type struct smmObject
 
 //3.관련 함수 변경 
 //object generation
-void* smmObj_genObject(char* name, int type, int credit, int energy, smmObjType_e objtype, smmObjGrade_e grade;)
+smmObject_t* smmObj_genObject(char* name, int type, int credit, int energy, smmObjType_e objtype, smmObjGrade_e grade;)
 {
 	smmObject_t* ptr;
 	
@@ -78,6 +78,16 @@ char* smmObj_getNodeName(void* obj)
 	return ptr->name;
 }
 
+char* smmObj_getGradeName(smmGrade_e grade)
+{
+	return smmGreadeName[grade];
+}
+
+
+char* smmObj_getNodeName(int node_nr)
+{
+	return smm_node[node_nr].name;
+}
 
 int smmObj_getNodeType(int node_nr)
 {
@@ -94,3 +104,4 @@ int smmObj_getNodeEnergy(int node_nr)
 {
     return smm_node[node_nr].energy;
 }
+
