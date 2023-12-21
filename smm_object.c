@@ -25,7 +25,24 @@ static char smmNodeName[SMMNODE_TYPE_MAX][MAX_CHARNAME] =
 	"축제!"
 };
 
+char*smmObj_getTypeName (int type)
+{
+	return (char*)smmNodeName[type];
+}
 
+const char* gradeName[] =
+{
+	"A+",
+	"A0",
+	"A-",
+	"B+",
+	"B0",
+	"B-",
+	"C+",
+	"C0",
+	"C-"
+	
+};
 
 //1.구조체 형식 정의 
 type struct smmObject
@@ -45,7 +62,7 @@ type struct smmObject
 
 //3.관련 함수 변경 
 //object generation
-smmObject_t* smmObj_genObject(char* name, int type, int credit, int energy, smmObjType_e objtype, smmObjGrade_e grade;)
+smmObject_t* smmObj_genObject(char* name, int type, int credit, int energy, smmObjType_e objtype, smmObjGrade_e grade)
 {
 	smmObject_t* ptr;
 	
@@ -68,24 +85,33 @@ char* smmObj_getNodeName(void* obj)
 	return ptr->name;
 }
 
-char* smmObj_getGradeName(smmObjGrade_e grade)
+char* smmObj_getGradeName(void* obj)
 {
-	return smmGreadeName[grade];
+	smmObj_getGradeName(smmObject_t*)obj;
+	return gradeName[ptr->grade];
 }
 
-int smmObj_getNodeType(int node_nr)
+int smmObj_getNodeType(void* obj)
 {
-	return smm_node[node_nr].type;
+	smmObject_t* ptr = (smmObject_t*)obj;
+	return ptr -> type;
 }
 
 
-int smmObj_getNodeCredit(int node_nr)
+int smmObj_getNodeCredit(void* obj)
 {
-    return smm_node[node_nr].credit;
+    smmObject_t* ptr = (smmObject_t*)obj;
+	return ptr -> credit;
 }
 
-int smmObj_getNodeEnergy(int node_nr)
+int smmObj_getNodeEnergy(void* obj)
 {
-    return smm_node[node_nr].energy;
+    smmObject_t* ptr = (smmObject_t*)obj;
+	return ptr -> energy;
 }
 
+int smmObj_getNodeGrade(void* obj)
+{
+	smmObject_t* ptr = (smmObject_t*)obj;
+	return ptr -> grade;
+}

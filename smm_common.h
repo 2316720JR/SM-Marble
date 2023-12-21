@@ -12,6 +12,7 @@
 #include <stdlib.h>
 
 #define MAX_CHARNAME                200
+#define MAX_TAKENLECTURE
 
 #define GRADUATE_CREDIT             30
 #define MAX_DIE                     6

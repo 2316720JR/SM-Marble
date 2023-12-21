@@ -30,6 +30,8 @@ typedef struct player
 	char name[MAX_CHARNAME];
 	int accumCredit;
 	int flag_graduate;
+	char takenLecture[MAX_TAKENLECTURE][MAX_CHARNAME];
+	int takenLectureNum
 }player_t;
 
 static player_t * cur_player;
@@ -48,18 +50,6 @@ void printGrades(int player); //print all the grade history of the player
 #endif
 
 
-int isGraduated(void)//check if any player is graduated
-{
-	int i;
-	for(i=0;i<player_nr;i++)
-	{
-		if (cur_player[i].accumCredit >= GRADUATE_CREDIT)
-			cur_player[i].flag_graduate = 1;
-		else
-		
-	}
-}
-
 void printGrades(int player)
 {
 	int i;
@@ -73,6 +63,19 @@ void printGrades(int player)
 }
 
 float calcAverageGrade(int player); //calculate average grade of the player
+{
+	float gradeSum = 0.0;
+	
+	if (takenLectureNum == 0); //수강한 강의가 없는 경우 
+		printf("수강한 강의가 없습니다."\n);
+		return 0.0;
+		
+	for (int i = 0;i<takenLectureNum;i++) //수강한 강의가 있는 경우 
+	{
+		void *gradePtr = smmdb_getData(LISTNO_OFFSET_GRADE + player, i);
+		gradeSum += smmObj_getNodeGrade(gradePtr);
+	}
+}
 
 void printPlayerStatus(void)//print all player status at the beginning of each turn
 {
@@ -169,7 +172,8 @@ smmGrade_e takeLecture(int player, char *lectureName, int credit); //take the le
 			void *gradePtr = smmObj_genObject(lectureName, smmObjType_grade, 0, credit, 0, resulttGrade);
 			smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
 			
-			//수강 강의 저장 
+			strcpy(cur_player[player].takenLecture, cur_player[player].takenLectureNum, lecturename) //저장 
+			cur_player[player].takenLectureNum++; 
 		}
 	}
 	else
@@ -188,18 +192,9 @@ void actionNode(int player)
 	
     switch(type) //node 칸마다 수행  동작 정해주기
     {
-        //case lecture:
         case SMMNODE_TYPE_LECTURE://소요에너지,점수획득 
-				cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
-        		cur_player[player].energy -= smmObj_getNodeEnergy(boardPtr);
-        	
-        	//grade generation
-        	gradePtr = smmObj_genObject(name, smmObjType_grade, 0, smmObj_getNodeCredit(boardPtr), 0, ??);
-        	smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
-			break;
-			
-        default:
-            break;
+				takeLecture(player, name, smmObj_getNodeCredit(boardPtr)); //takeLecture함수 호출 
+				break; 
             
             
         case SMMNODE_TYPE_RESTAURANT://보충에너지 
@@ -220,7 +215,7 @@ void actionNode(int player)
         	
         case SMMNODE_TYPE_GOTOLAB://상태전환, 실험실이동(칸 이동) 
         	//실험중 상태 함수 불러오기 
-			cur_player[player].position = ; //플레이어 포지션 == 실험실노드 (칸이동)
+			cur_player[player].position = 8; //플레이어 포지션 == 실험실노드 (칸이동)
 			 
         	
         	
@@ -230,6 +225,11 @@ void actionNode(int player)
         	
         	
         case SMMNODE_TYPE_FESTIVAL://축제카드(랜덤), 미션수행 
+        {
+			printf("축제가 열렸습니다. 카드를 뽑아 미션을 수행하세요!"\n)
+			printf("press any key for random card")
+			
+		//랜덤 fest 미션 카드 선택 및 출력 
 		}
     }
 }
@@ -243,6 +243,22 @@ void goFoward(int player, int step)//make player go "step" steps on the board (c
 				cur_player[player].name, cur_player[player].position
 				smmObj_getNodeName(boardPtr));
 }
+
+
+int isGraduated(void)//졸업했는지(최종성적 고려?) 
+{
+	int i;
+	for(i=0;i<player_nr;i++)
+	{
+		if (cur_player[i].accumCredit >= GRADUATE_CREDIT)
+			cur_player[i].flag_graduate = 1;
+		else
+		
+	}
+}
+
+
+
 
 
 
