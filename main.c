@@ -152,6 +152,7 @@ void actionNode(int player)
     switch(type) //node 칸마다 수행  동작 정해주기
     {
         case SMMNODE_TYPE_LECTURE://소요에너지,점수획득
+        	printf("강의실입니다. 수업을 들을 수 있습니다.\n");
 			if (cur_player[player].energy >= smmObj_getNodeEnergy(boardPtr))
 			{
 				int yourChoice = 1; 
@@ -187,6 +188,7 @@ void actionNode(int player)
             
             
         case SMMNODE_TYPE_RESTAURANT://보충에너지(not 카드) 
+        	printf("식당입니다. 밥을 먹고 에너지가 10 늘어납니다.\n");
         	cur_player[player].energy += 10;
         	break;
         	
@@ -197,18 +199,27 @@ void actionNode(int player)
 				//if 주사위 던져서 5밑
 					//그대로, 횟수는1번 추가  
 			else //실험중이 아닌 경우(gotolab거치지 않은 경우)
+			{
+				print("실험실에 도착했습니다.\n");
 				break;	
+        	}
         	
         	
         case SMMNODE_TYPE_HOME://머무름,지나감 모두 에너지보충
-        	cur_player[player].energy += smmObj_getNodeEnergy(noardPtr);
+        	
+        	cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
+        	printf("집입니다. 에너지가 충전됩니다. (에너지 + %d)\n", smmObj_getNodeEnergy(boardPtr));
         	break;
         	
         	
         	
         case SMMNODE_TYPE_GOTOLAB://상태전환, 실험실이동(칸 이동) 
-        	//실험중 상태 함수 불러오기 
-			cur_player[player].position = 8; //플레이어 포지션 == 실험실노드 (칸이동)
+		{
+			printf("실험실로 가야 합니다. 실험실 위치로 이동합니다.\n");
+			cur_player[player].position = 8;
+			player->experiment_ing;
+			break;
+		}
 			 
         	
         	
@@ -224,8 +235,8 @@ void actionNode(int player)
         	
         case SMMNODE_TYPE_FESTIVAL://축제카드(랜덤), 미션수행 
         {
-			printf("축제가 열렸습니다. 카드를 뽑아 미션을 수행하세요!"\n)
-			printf("(press any key for your random mission card!)\n")
+			printf("축제가 열렸습니다. 카드를 뽑아 미션을 수행하세요!"\n);
+			printf("(press any key for your random mission card!)\n");
 			
 		//랜덤 fest 미션 카드 출력 
 		FestivalCard = smmdb_getData(LISTNO_FESTCARD, rand()%smmdb_len(LISTNO_FESTCARD));
@@ -242,7 +253,7 @@ void goFoward(int player, int step)//make player go "step" steps on the board (c
 	boardPtr = smmdb_getData(LISTNO_NODE, cur_player[player].position);
 	
 	printf("%s go to node %i (type: %s)\n",
-				cur_player[player].name, cur_player[player].position
+				cur_player[player].name, cur_player[player].position;
 				smmObj_getNodeName(boardPtr));
 }
 
@@ -250,7 +261,7 @@ void goFoward(int player, int step)//make player go "step" steps on the board (c
 int isGraduated(void)//졸업했는지(최종성적 고려?) 
 {
 	int i;
-	void *gradePtr
+	void *gradePtr;
 	
 	print("플레이어 '%s'의 상황: \n", cur_player[player].name);
 	
