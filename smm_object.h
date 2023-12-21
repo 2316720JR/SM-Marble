@@ -17,6 +17,8 @@
 #define SMMNODE TYPE_FESTIVAL		6
 		
 #define SMMNODE_TYPE_MAX			7
+#define MAX_GRADE       9
+
 
 typedef enum smmObjType
 {
@@ -57,13 +59,13 @@ void smmObj_genObject(char*name, smmObjType_e objType, int type, int credit, int
 
 
 //member retrieving
-char* smmObj_getNodeName(int node_nr);
-char* smmObj_getGradeName(int node_nr);
+char* smmObj_getNodeName(void* obj);
+char* smmObj_getGradeName(void* obj);
 
-int smmObj_getNodeType(int node_nr);
-int smmObj_getNodeCredit(int node_nr);
-int smmObj_getNodeEnergy(int node_nr);
-int smmObj_getNodeGrade(int node_nr);
+int smmObj_getNodeType(void* obj);
+int smmObj_getNodeCredit(void* obj);
+int smmObj_getNodeEnergy(void* obj);
+int smmObj_getNodeGrade(void* obj);
 
 //element to string
 char* smmObj_getTypeName(int type);

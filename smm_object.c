@@ -22,7 +22,7 @@ static char smmNodeName[SMMNODE_TYPE_MAX][MAX_CHARNAME] =
 	"집",
 	"실험실로이동",
 	"음식찬스",
-	"축제!"
+	"축제시간"
 };
 
 char*smmObj_getTypeName (int type)
@@ -87,7 +87,7 @@ char* smmObj_getNodeName(void* obj)
 
 char* smmObj_getGradeName(void* obj)
 {
-	smmObj_getGradeName(smmObject_t*)obj;
+	smmObject_t* ptr = (smmObject_t*)obj;
 	return gradeName[ptr->grade];
 }
 
