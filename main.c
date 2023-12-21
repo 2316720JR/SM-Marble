@@ -216,9 +216,12 @@ void actionNode(int player)
         case SMMNODE_TYPE_GOTOLAB://상태전환, 실험실이동(칸 이동) 
 		{
 			printf("실험실로 가야 합니다. 실험실 위치로 이동합니다.\n");
-			cur_player[player].position = 8;
-			player->experiment_ing;
-			break;
+			for(i=0;i<board_nr;i++)
+			{
+				boardPtr = smmdb_getData(LISTNO_NODE,i);
+				if (type==SMMNODE_TYPE_LABORATORY)
+					cur_player[player].position = i;
+			}
 		}
 			 
         	
