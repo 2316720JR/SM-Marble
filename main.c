@@ -30,7 +30,6 @@ typedef struct player
 	char name[MAX_CHARNAME];
 	int accumCredit;
 	int flag_graduate;
-	int flag_experiment;
 }player_t;
 
 static player_t * cur_player;
@@ -44,8 +43,6 @@ static int player_name[MAX_PLAYER][MAX_CHARNAME];
 //function prototypes
 #if 0
 //print grade history of the player
-float calcAverageGrade(int player); //calculate average grade of the player
-smmGrade_e takeLecture(int player, char *lectureName, int credit); //take the lecture (insert a grade of the player)
 void* findGrade(int player, char *lectureName); //find the grade from the player's grade history
 void printGrades(int player); //print all the grade history of the player
 #endif
@@ -74,6 +71,8 @@ void printGrades(int player)
 		printf("%s : %i\n", smmObj_getNodeName(gradePtr), smmObj_getNodeGrade(gradePtr));
 	}
 }
+
+float calcAverageGrade(int player); //calculate average grade of the player
 
 void printPlayerStatus(void)//print all player status at the beginning of each turn
 {
@@ -124,6 +123,61 @@ int rolldie(int player)
 }
 
 
+int experiment_ing(int player)
+{	
+	int dicetoEscape;
+	dicetoEscape = rollDice();
+	
+	printf("탈출하기 위해 플레이어는 주사위를 던져서 5 이상의 숫자를 얻어야 합니다. ")
+	printf("주사위 결과: %d\n", dicetoEscape);
+	
+	if (dicetoEscape < 5)
+		printf("실험실을 탈출 했습니다!\n");
+	if (dicetoEscape >= 5)
+		printf("실험실을 탈출하지 못합니다.\n"); 
+}
+
+
+smmGrade_e takeLecture(int player, char *lectureName, int credit); //take the lecture (insert a grade of the player)
+{
+	void *boardPtr = smm_getData(LISTNO_NODE, cur_player[player].position); 
+	
+	if (strcmp(cur_player[player].takenLecture[i], lectureName) == 0)
+			printf("이미 수강 완료된 강의입니다.\n");
+			return 0;
+			
+	if (cur_player[player].energy >= smmObj_getNodeEnergy(boardPtr))
+	{
+		int yourChoice = 1; 
+		
+		printf("수강하려면 1번, 드랍하려면 2번을 눌러 주세요.\n");
+		scanf("%d\n", &yourChoice);
+		
+		if (yourChoice == 1)
+		{
+			printf("강의를 드랍합니다.\n");
+			break;
+		}	
+		if (yourChoice == 2)
+		{
+			printf("강의를 수강합니다.\n")
+			cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
+			cur_player[player].energy -= smmObj_getNodeEnergy(boardPtr);
+			
+			int resultGrade = rand()%MAX_GRADE; //성적생성 및 저장 
+			smmObjGrade_e randomResultGrade = (smmObjGrade_e)resultGrade;
+			void *gradePtr = smmObj_genObject(lectureName, smmObjType_grade, 0, credit, 0, resulttGrade);
+			smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
+			
+			//수강 강의 저장 
+		}
+	}
+	else
+		printf("%s의 에너지가 부족합니다. 수강할 수 없습니다.\n", cur_player[player].name);
+	
+	return 0;
+}
+
 //action code when a player stays at a node
 void actionNode(int player)
 {
@@ -135,8 +189,7 @@ void actionNode(int player)
     switch(type) //node 칸마다 수행  동작 정해주기
     {
         //case lecture:
-        case SMMNODE_TYPE_LECTURE:
-        	if //
+        case SMMNODE_TYPE_LECTURE://소요에너지,점수획득 
 				cur_player[player].accumCredit += smmObj_getNodeCredit(boardPtr);
         		cur_player[player].energy -= smmObj_getNodeEnergy(boardPtr);
         	
@@ -149,27 +202,34 @@ void actionNode(int player)
             break;
             
             
-        case SMMNODE_TYPE_RESTAURANT:
+        case SMMNODE_TYPE_RESTAURANT://보충에너지 
+        	cur_player[player].energy += 10;
+        	break;
         	
         	
         	
-        case SMMNODE_TYPE_LABORATORY:
+        case SMMNODE_TYPE_LABORATORY://just 실험실(수행동작 없음)       
+			break;	
+        	
+        	
+        case SMMNODE_TYPE_HOME://머무름,지나감 모두 에너지보충
+        	cur_player[player].energy += smmObj_getNodeEnergy(noardPtr);
+        	break;
         	
         	
         	
-        case SMMNODE_TYPE_HOME:
+        case SMMNODE_TYPE_GOTOLAB://상태전환, 실험실이동(칸 이동) 
+        	//실험중 상태 함수 불러오기 
+			cur_player[player].position = ; //플레이어 포지션 == 실험실노드 (칸이동)
+			 
+        	
+        	
+        case SMMNODE_TYPE FOODCHANCE://에너지보충,음식카드(랜덤)
+        	cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
         	
         	
         	
-        case SMMNODE_TYPE_GOTOLAB:
-        	
-        	
-        	
-        case SMMNODE_TYPE FOODCHANCE:
-        	
-        	
-        	
-        case SMMNODE_TYPE_FESTIVAL:
+        case SMMNODE_TYPE_FESTIVAL://축제카드(랜덤), 미션수행 
 		}
     }
 }

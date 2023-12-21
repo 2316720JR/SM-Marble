@@ -25,8 +25,8 @@ typedef enum smmObjType
 	smmObjType_grade
 } smmObjType_e;
 
-
-/* node type :
+/*
+node type :
     lecture,
     restaurant,
     laboratory,
@@ -53,8 +53,8 @@ typedef enum smmObjGrade
 
 
 //object generation
-void* smmObj_genObject(char*name, smmObjType_e objType, int type, int credit, int energy, smmObjGrade_e grade);
-void smmObj_genFood(char*food, int charge)
+void smmObj_genObject(char*name, smmObjType_e objType, int type, int credit, int energy, smmObjGrade_e grade);
+
 
 //member retrieving
 char* smmObj_getNodeName(int node_nr);
