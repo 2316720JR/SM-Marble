@@ -22,21 +22,10 @@ static char smmNodeName[SMMNODE_TYPE_MAX][MAX_CHARNAME] =
 	"집",
 	"실험실로이동",
 	"음식찬스",
-	"축제시간"
+	"축제!"
 };
 
-typedef enum smmObjGrade
-{
-	smmObjGrade_Ap = 0,
-	smmObjGrade_A0,
-	smmObjGrade_Am,
-	smmObjGrade_Bp,
-	smmObjGrade_B0,
-	smmObjGrade_Bm,
-	smmObjGrade_Cp,
-	smmObjGrade_C0,
-	smmObjGrade_Cm
-} smmObjGrade_e;
+
 
 //1.구조체 형식 정의 
 type struct smmObject
@@ -63,10 +52,11 @@ smmObject_t* smmObj_genObject(char* name, int type, int credit, int energy, smmO
 	ptr = (smmObject_t*)malloc(sizeof(smmObject_t));
 	
 	strcpy(ptr->name, name);
-	ptr->type = objType;
+	ptr->objType = objType;
 	ptr->credit = credit;
 	ptr->energy = energy;
 	ptr->grade = grade;
+	ptr->type = type;
 	
 	return ptr;
 }
@@ -78,15 +68,9 @@ char* smmObj_getNodeName(void* obj)
 	return ptr->name;
 }
 
-char* smmObj_getGradeName(smmGrade_e grade)
+char* smmObj_getGradeName(smmObjGrade_e grade)
 {
 	return smmGreadeName[grade];
-}
-
-
-char* smmObj_getNodeName(int node_nr)
-{
-	return smm_node[node_nr].name;
 }
 
 int smmObj_getNodeType(int node_nr)
